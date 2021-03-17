@@ -1,0 +1,36 @@
+#CASE SENSITIVE!!!
+#Computers in the beginning of the file without defined group are UNGROUPPED. They belong only to group ALL
+#      192.168.1.100
+#      cloudVMmachine.google.com
+#      linuxmachine1 192.168.1.101
+
+
+#to add variables
+#[all:vars]
+#ansible_connection=ssh
+#ansible_user=v
+#ansible_ssh_pass=12345
+#ansible_become=yes
+#ansible_become_method=sudo
+#ansible_become_pass=12345
+
+
+[ansibleserver]
+ansiblesrv1 ansible_host=192.168.1.150
+
+[GROUP1]
+centos1 ansible_host=192.168.1.151 owner=proxy
+
+[GROUP2]
+ubuntu1 ansible_host=192.168.1.154 owner=apache
+ubuntu2 ansible_host=192.168.1.153 owner=apache
+
+#variables for GROUP2
+#[GROUP2:vars]
+#ansible_ssh_user=v ansible_ssh_pass=12345
+#ansible_user=v ansible_sshprivate_key_file=/home/v/.ssh/sshkey1.pem
+
+#group PROD will contain groups GROUP1 and GROUP2
+[PROD:children]
+GROUP1
+GROUP2
