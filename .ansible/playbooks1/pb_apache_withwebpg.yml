@@ -1,0 +1,66 @@
+---
+#TEST PLAYBOOK written by V. Bilous
+#BE CAREFUL WITH SPACES,VERY IMPORTANT
+#
+#MAIN DESCRIPTION FOR WHOLE PLAYBOOK,HOSTS IT APPLIED TO,BECOME A ROOT
+- name:  Install default Apache Web Server
+  hosts: PROD
+  become: yes
+
+#DESCRIBE VARIABLES FOR PLAYBOOK
+  vars:
+#    github_apache:
+#    github_ansible:
+#    github_nginx:
+#    github_haproxy:
+#    github_website:
+    key_pub_ssh: /home/v/.ssh/id_rsa.pub
+#    key_pub_github: /home/v/files_to_copy/git/
+    website: /home/v/.ansible/files_to_transfer/website/
+    website_dest: /var/www/html/
+    apache_config: /home/v/files_to_copy/
+
+#RUN TASKS
+  tasks:
+# - name: Copy Public Key, configure SSH and disable password auth.
+    
+  - name: Install NGINX and HAproxy on CentOS
+    yum: name=nginx state=latest
+         name=haproxy state=latest
+    when: ansible_os_family == "RedHat"
+
+# - name: Install GIT
+
+# - name: Copy private key for GITHUB access
+
+#BLOCK
+#it will be applied to block of actions below for "WHEN" condition 
+  - block:   # ======= block for UBUNTU/Debian ========
+    
+    - name: Install Apache WebServer for Ubuntu
+      yum: name=apache2 state=latest
+      
+    - name: Copy website content to /var/www/ to Ubuntu
+      copy: src={{ website }} dest={{ website_dest }}  mode=preserve
+      #notify will call handler with the same name in HANDLERS
+      notify: Restart Apache DEBIAN
+
+    - name: Start Apache and Enable it on every boot for Ubuntu
+      service: name=apache2 state=started enabled=yes
+    when: ansible_os_family == "Debian"
+
+  - name: Install GIT 
+    yum: name=git
+
+# - name: Download website from Git repository "Ansible"
+#   git:
+
+#HANDLERS
+# to use handler copy exact "name" to "notify:" string
+  handlers:
+  - name: Restart Apache DEBIAN
+    service: name=apache2 state=restarted
+
+  - name: Restart Apache REDHAT
+    service: name=httpd state=restarted
+

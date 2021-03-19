@@ -1,0 +1,10 @@
+---
+- name: Install haproxy
+  hosts: group1
+  become: yes
+
+  tasks:
+  - name: install HAproxy
+    
+
+---

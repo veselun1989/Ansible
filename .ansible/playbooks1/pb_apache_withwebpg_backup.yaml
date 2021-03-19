@@ -1,0 +1,50 @@
+---
+- name:  Install default Apache Web Server
+  hosts: GROUP2
+  become: yes
+
+  vars:
+    github_apache:
+    github_ansible:
+    github_nginx:
+    github_haproxy:
+    github_website:
+    git_key: /home/v/files_to_copy/git/
+    website: /home/v/.ansible/files_to_transfer/apache/index.html
+    website_dest: /var/www/html
+    apache_config: /home/v/files_to_copy/
+
+  tasks:
+  - name: Copy Public Key, configure SSH and disable password auth.
+    
+  - name: Install NGINX and HAproxy on CentOS
+    apt: name=nginx state=latest
+    apt: name=haproxy state=latest
+
+
+  - name: Install GIT
+
+  - name: Copy private key for GITHUB access
+
+  - name: Uninstall previous Apache server
+    yum: name=apache2 state=absent
+ 
+  - name: Install Apache WebServer for Ubuntu
+    yum: name=apache2 state=latest
+
+  - name: Copy website file to /var/www/index.html to Ubuntu
+    copy: src={{ website }} dest={{ website_dest }} mode=0644
+    notify: Restart Apache
+
+  - name: Start Apache and Enable it on every boot for Ubuntu
+    service: name=apache2 state=started enabled=yes
+
+  - name: Install GIT 
+    yum: name=git
+
+  - name: Download website from repository Ansible
+    git:
+
+   handlers:
+  - name: Restart Apache
+    service: name=apache2 state=restarted
